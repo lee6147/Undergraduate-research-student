@@ -8,6 +8,7 @@
 [![React](https://img.shields.io/badge/React_18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Custom Frames](https://img.shields.io/badge/Custom_Frames-6366f1?style=for-the-badge&logo=windowsterminal&logoColor=white)](https://github.com/Ellpeck/ObsidianCustomFrames)
 [![Claude](https://img.shields.io/badge/Claude-cc785c?style=for-the-badge&logo=anthropic&logoColor=white)](https://claude.ai)
+[![Platform](https://img.shields.io/badge/Desktop_Only-Win%20%7C%20Mac%20%7C%20Linux-333333?style=for-the-badge)](/)
 
 <br/>
 
@@ -59,7 +60,7 @@ HTML 파일이 몇 개인가요?
 └── 경로 입력이 귀찮다 → 프롬프트 D (자동 탐지)
 ```
 
-> **전제 조건:** Obsidian **데스크톱 앱** (Windows / macOS / Linux). 모바일에서는 Custom Frames의 WebView가 지원되지 않습니다.
+> ⚠️ **전제 조건:** Obsidian **데스크톱 앱** (Windows / macOS / Linux) 전용. 모바일에서는 Custom Frames의 WebView가 지원되지 않습니다.
 
 <br/>
 
@@ -106,7 +107,7 @@ Custom Frames 플러그인은 이미 설치했어.
 - 위치: {Vault}/.obsidian/plugins/obsidian-custom-frames/data.json
 - url 형식: file:/// + 절대경로 (역슬래시가 아닌 정방향 슬래시 / 사용)
 - forceIframe: 반드시 false (Electron WebView 사용해야 JS 실행 가능)
-- padding: 0 (frames 배열 바깥, 최상위 속성. 우측 잘림 방지)
+- padding: 0 (frames 배열 바깥의 최상위 속성. 우측 잘림 방지)
 - customCss: "body { overflow-x: hidden; }" (가로 스크롤 방지)
 
 [마크다운 노트 규칙]
@@ -115,7 +116,7 @@ Custom Frames 플러그인은 이미 설치했어.
 - style: height: 800px; width: 100%; overflow: hidden;
 
 [재시작 방법]
-- Windows: taskkill //IM "Obsidian.exe" //F 후 obsidian:// URI로 재실행
+- Windows: taskkill //IM "Obsidian.exe" //F 후 start obsidian:// 로 재실행
 - macOS: osascript -e 'quit app "Obsidian"' 후 open -a Obsidian
 - Linux: pkill -f obsidian 후 obsidian &
 - 또는 사용자에게 수동 재시작 안내
@@ -144,7 +145,8 @@ Obsidian Vault 경로: (여기에 입력)
 [작업 내용]
 - 각 HTML 파일을 Vault/HTML/ 폴더로 복사
 - data.json의 frames 배열에 모든 파일을 등록
-  - forceIframe: false / padding: 0 (최상위 속성) / customCss: "body { overflow-x: hidden; }"
+  - forceIframe: false / customCss: "body { overflow-x: hidden; }"
+  - padding: 0 (frames 배열 바깥의 최상위 속성)
 - 각 파일마다 별도의 .md 임베드 노트 생성
 - Obsidian 재시작
 ```
@@ -169,8 +171,8 @@ Obsidian Custom Frames에 새 HTML 파일을 추가하고 싶어.
 
 [작업 순서]
 1. 기존 data.json 읽기
-2. frames 배열에 새 프레임 객체 추가 (forceIframe: false)
-3. 최상위 속성 padding이 0인지 확인, 없으면 추가
+2. frames 배열에 새 프레임 객체 추가 (forceIframe: false, customCss: "body { overflow-x: hidden; }")
+3. 최상위 속성 padding이 0인지 확인 — 없거나 다르면 0으로 설정
 4. HTML 파일을 Vault/HTML/로 복사
 5. .md 임베드 노트 생성
 6. Obsidian 재시작
@@ -200,7 +202,7 @@ Obsidian Custom Frames에 새 HTML 파일을 추가하고 싶어.
    - Linux: ~/Documents/Obsidian Vault, ~/obsidian-vault 등
 2. .obsidian/plugins/obsidian-custom-frames/ 디렉토리 존재 여부 확인
 3. 기존 data.json이 있으면 읽어서 추가, 없으면 새로 생성
-4. 설정 규칙: forceIframe: false / padding: 0 / customCss: "body { overflow-x: hidden; }"
+4. 설정 규칙: forceIframe: false / padding: 0 (최상위 속성) / customCss: "body { overflow-x: hidden; }"
 5. 마크다운 노트 생성 후 Obsidian 재시작
 ```
 
@@ -336,7 +338,7 @@ Custom Frames 플러그인이 어떤 URL을 어떤 이름으로 열지 정의하
 }
 ```
 
-> ⚠️ **`padding`은 `frames` 배열 바깥의 최상위 속성이다.** 개별 프레임 객체 안이 아니라 JSON 루트에 위치해야 한다.
+> ⚠️ **`padding`은 `frames` 배열 바깥의 최상위 속성이다.** 개별 프레임 객체 안이 아니라 JSON 루트 레벨에 위치해야 한다.
 
 각 필드의 의미:
 
@@ -486,7 +488,7 @@ data.json이 올바른 JSON이 아니면 Custom Frames가 아예 로드되지 �
 
 | 실수 | 예시 |
 |:---|:---|
-| 마지막 쉼표 | `..."customJs": "" } , ]` ← 배열 마지막 객체 `}` 뒤에 쉼표 불필요 |
+| 배열 끝 쉼표 | `..."customJs": "" } , ]` ← 마지막 객체 `}` 뒤에 쉼표 불필요 |
 | 경로 역슬래시 | `"url": "file:///C:\Users\..."` ← JSON에서 `\`는 이스케이프 문자 |
 | 따옴표 누락 | `forceIframe: false` ← JSON 키는 반드시 `"forceIframe"` |
 
