@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>연구개발 추진 배경 — BQB v4</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&display=swap" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  @page { size: A4; margin: 20mm 25mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #f5f5f0;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .page {
+    width: 100%;
+    max-width: 700px;
+    background: #fff;
+    padding: 48px 52px 56px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+    border-radius: 2px;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { box-shadow: none; padding: 0; max-width: none; }
+    .thought-flow { display: none !important; }
+  }
+
+  /* 제목 */
+  h1 {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .subtitle {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid #e0e0e0;
+  }
+
+  /* 사고의 순서 */
+  .thought-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 28px;
+    padding: 12px 16px;
+    background: #f8f8f5;
+    border: 1px solid #e8e8e2;
+    border-radius: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .thought-step {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 10px;
+    color: #666;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .thought-step.active {
+    background: #1e3a5f;
+    color: #fff;
+    font-weight: 700;
+  }
+  .thought-arrow {
+    font-size: 11px;
+    color: #bbb;
+    padding: 0 2px;
+  }
+
+  /* 본문 단락 */
+  .stage {
+    position: relative;
+    margin-bottom: 18px;
+    padding-left: 0;
+  }
+  .stage p {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    line-height: 1.95;
+    color: #1a1a1a;
+    text-align: justify;
+    word-break: keep-all;
+    text-indent: 0;
+  }
+  .stage p + p {
+    margin-top: 4px;
+  }
+
+  /* 전환 문장 강조 */
+  .turn {
+    color: #1e3a5f;
+    font-weight: 600;
+  }
+
+  /* 단계 라벨 */
+  .stage-label {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #1e3a5f;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* 구분선 */
+  .divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+  }
+
+  /* 하단 체크리스트 */
+  .checklist {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1.5px solid #e0e0e0;
+  }
+  .checklist-title {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+  .checklist-item {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.7;
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 2px;
+  }
+  .checklist-item::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    color: #1e3a5f;
+    font-weight: 700;
+  }
+
+  /* 글자수 카운터 */
+  .char-count {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 10px;
+    color: #aaa;
+    text-align: right;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>1. 연구개발 추진 배경</h1>
+  <div class="subtitle">BQB 기반 단일 반도체 큐비트 대규모 배열 기술 개발 &middot; 2026-양자-5</div>
+
+  <!-- 사고의 순서 -->
+  <div class="thought-flow">
+    <div class="thought-step">0 &middot; 왜 지금인가</div>
+    <span class="thought-arrow">&rarr;</span>
+    <div class="thought-step">1 &middot; 이 문제는 다르다</div>
+    <span class="thought-arrow">&rarr;</span>
+    <div class="thought-step">2 &middot; 기존엔 왜 안 됐나</div>
+    <span class="thought-arrow">&rarr;</span>
+    <div class="thought-step">3 &middot; 진짜 병목은 여기</div>
+    <span class="thought-arrow">&rarr;</span>
+    <div class="thought-step">4 &middot; 이 접근밖에 없다</div>
+  </div>
+
+  <!-- 0단계: 시의성 -->
+  <div class="stage">
+    <div class="stage-label">0 &mdash; 시의성: 왜 지금 이 과제인가</div>
+    <p>2025년, 300mm 파운드리에서 제작된 실리콘 스핀 큐비트가 단일 및 2큐비트 게이트 충실도 99%&thinsp;이상을 복수 디바이스에서 재현하며 양자 오류 정정 임계치를 초과하였다. 이와 동시에 Intel(12큐비트 선형 배열), QuTech(6큐비트 프로세서), imec(산업 파트너 확장) 등 선도 그룹이 일제히 배열 확장 공정으로 전환하고 있다. 한국은 22nm FD-SOI, 300mm 제조라인 등 반도체 인프라를 보유하나 이를 양자 배열로 전환하는 공정 기술은 미확보 상태이며, 선도국에 의해 배열 설계 규칙이 확립되면 후발 전환은 구조적으로 어려워진다. <span class="turn">단일 소자 성능이 임계치를 넘어선 지금, 경쟁 축은 배열 확장 공정으로 이동하였다.</span></p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 1단계: 상식의 전복 -->
+  <div class="stage">
+    <div class="stage-label">1 &mdash; 문제 재정의: 이 문제는 당신이 생각하는 그 문제가 아니다</div>
+    <p>그러나 단일 큐비트에서 검증된 결맞음 시간, 게이트 충실도, 판독 정확도는 배열이 되는 순간 유지되지 않는다. 배열은 단일 소자에 존재하지 않던 <em>동시성</em>이라는 새로운 제약을 부과하기 때문이다. N개의 큐비트가 동시에 3차원 위치 정밀도를 만족해야 하고, 동시에 전하 환경이 안정되어야 하며, 동시에 제어·판독 신호가 전달되어야 한다. <span class="turn">배열 확장의 본질은 개별 성능의 합산이 아니라, 동시 허용 오차의 관리이다.</span></p>
+  </div>
+
+  <!-- 2단계: 기존 접근의 해부 (경쟁 접근법 명시) -->
+  <div class="stage">
+    <div class="stage-label">2 &mdash; 기존 접근의 해부: 왜 지금까지 안 됐는가</div>
+    <p>현재 선도 그룹의 접근은 크게 세 갈래이다. gate-defined 양자점 기반 접근(Intel, QuTech)은 300mm CMOS 파운드리 호환성을 확보하여 대면적 균일성에 유리하나, 게이트 스택과 BEOL 배선의 열예산이 상충하여 다층 배선 집적에 구조적 제약이 존재한다. STM 리소그래피 기반 접근(SQC)은 원자 수준의 위치 정밀도를 달성하였으나, 직렬 패터닝 방식이므로 배열 처리량이 구조적으로 제한되며 현재 최대 10큐비트 수준에 머문다. 이온 주입 도너 접근은 기판 호환성을 확보하였으나, 확률적 배치에 따른 위치 분산을 배열 규모에서 통제하는 공정 방법론이 미확립이다. <span class="turn">세 접근 모두 개별 성능은 높으나, 공정 정밀도·전하 환경·배선 밀도·열관리를 동시에 충족하는 문제를 체계적으로 다루지 않는다 &mdash; 이 한계는 개별 기술의 부족이 아니라, 요소들이 분리 설계되어 왔기 때문에 발생한다.</span></p>
+  </div>
+
+  <!-- 3단계: 병목의 본질 -->
+  <div class="stage">
+    <div class="stage-label">3 &mdash; 병목의 본질: 공정창의 부재</div>
+    <p>분리 설계가 가능했던 이유는 소수 큐비트에서 요소 간 상호 제약이 무시 가능한 수준이었기 때문이다. 배열에서는 모든 제약이 동시에 활성화되며, 이를 관리하려면 모든 요소의 허용 범위가 겹치는 영역 — 통합 공정창(process window) — 이 사전에 정의되어야 한다. 이 공정창은 기하학적 창(3차원 위치 허용 오차), 전기적 창(계면 트랩·고정 전하·1/f 잡음의 허용 범위), 정렬 창(큐비트-배선 간 overlay 예산, ≤15&thinsp;nm)의 교집합으로 정의된다. 이 교집합이 존재하지 않으면 배열 규모와 무관하게 확장은 구조적으로 불가능하다. <span class="turn">공정창은 수율을 올리는 범위가 아니라, 배열이 커져도 동일성·결맞음·연결 수율이 유지되도록 오차의 전파 경로를 차단하는 설계 규칙이다.</span></p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- 4단계: 필연적 귀결 -->
+  <div class="stage">
+    <div class="stage-label">4 &mdash; 필연적 귀결: 이 문제 구조라면 이 접근밖에 없다</div>
+    <p>이 문제 구조로부터 각 기술 요소가 불가피하게 도출된다. 공정창이 정의되지 않으면 오차가 배열 규모에 비례하여 누적되므로, 큐비트 생성 이전에 기하·전기·정렬의 세 차원을 단일 좌표계로 결합하는 매립형 템플릿(BQB)이 선행되어야 한다. 이 템플릿이 유효하려면 인접 큐비트 간 전하 환경이 셀 단위로 격리되어야 하므로, STI + 전위 차폐 + 매립 장벽의 삼중 격벽이 수반된다. 배선 fan-out이 배열과 선형 증가하면 — 256큐비트 기준 256개 선(O(N)) — 4K 냉각단의 열 용량을 초과하므로, 극저온 근접 제어 IC(DD-IC)를 통해 fan-out을 O(√N)으로 억제하여 16개 선으로 감축해야 한다. 큐비트 형성(고온)과 정밀 배선(저온)의 열예산이 하나의 웨이퍼에서 양립 불가능하므로, 소자층과 배선층을 분리 제작한 뒤 저온 본딩으로 통합하는 분리 적층이 불가피하다. 공정창의 허용 범위는 큐비트 메커니즘에 따라 달라지므로, 동일 공정 인터페이스 위에서 전기적 경로(³¹P 도너)와 광학적 경로(2H-Si)를 병렬 탐색하여 교차 검증하는 것이 효율적이다.</p>
+    <p><span class="turn">본 과제의 기술 구성은 특정 기술의 장점에서 출발한 것이 아니다. 대규모 배열이라는 문제를 동시 허용 오차 관리로 재정의하고, 기존 분리 설계의 구조적 한계를 분석한 결과, 각 구성요소가 문제 구조로부터 불가피하게 도출된다. 이것이 본 과제 추진의 배경이다.</span></p>
+  </div>
+
+  <!-- 체크리스트 -->
+  <div class="checklist">
+    <div class="checklist-title">서술 검증 체크리스트</div>
+    <div class="checklist-item">0단계: 기술·경쟁·한국 세 축의 팩트 기반 시의성 제시</div>
+    <div class="checklist-item">1단계: "배열 = 동시 허용 오차 관리"로 문제 재정의</div>
+    <div class="checklist-item">2단계: 경쟁 접근법(gate-defined QD, STM 리소그래피, 이온 주입)이 구체적으로 명시됨</div>
+    <div class="checklist-item">2단계: 기존 한계가 "분리 설계 구조"의 문제로 귀결</div>
+    <div class="checklist-item">2→3 인과 다리: 분리 설계 → 상호 제약 → 공정창 부재</div>
+    <div class="checklist-item">3단계: 기하학적·전기적·정렬 창의 교집합으로 공정창 정의</div>
+    <div class="checklist-item">4단계: 5개 기술이 나열이 아닌 인과 체인으로 도출</div>
+    <div class="checklist-item">정량적 앵커: fan-out O(N)→O(√N), 256선→16선 포함</div>
+    <div class="checklist-item">정량적 앵커: overlay 예산 ≤15nm 포함</div>
+    <div class="checklist-item">"장점" "혁신적" "세계 최초" 등 과장 표현 없음</div>
+    <div class="checklist-item">모든 문장이 다음 문장의 근거로 기능</div>
+  </div>
+
+  <div class="char-count" id="charCount"></div>
+  <script>
+    // 본문 글자 수 카운트
+    const stages = document.querySelectorAll('.stage p');
+    let total = 0;
+    stages.forEach(p => { total += p.textContent.replace(/\s/g,'').length; });
+    document.getElementById('charCount').textContent = '본문 글자 수: ' + total + '자';
+  </script>
+
+</div>
+</body>
+</html>
