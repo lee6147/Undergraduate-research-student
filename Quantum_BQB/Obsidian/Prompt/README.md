@@ -1,499 +1,510 @@
-# React HTML → 정적 HTML 변환 프롬프트 가이드
+# Obsidian HTML/React Prompt
 
-## 📋 프로젝트 개요
-
-**목표**: React 기반 BQB 학습 앱(213 KB) → 옵시디언 호환 정적 HTML 5개 파일(128.7 KB)
-
-**원본**: Launcher.html (React JSX, 5개 앱 통합)  
-**결과**: 5개 독립 HTML + README.md
+> JSX/TSX 파일을 Obsidian에서 실행 가능한 HTML로 변환하고 삽입하는 전체 워크플로우 문서입니다.
+> 환경 구성 → 변환 → 삽입까지 하나의 문서에서 다룹니다.
 
 ---
 
-## 🎯 실제 사용한 프롬프트 (순서대로)
+## 목차
 
-아래는 실제 이 프로젝트에서 사용한 프롬프트를 **그대로** 기록한 것입니다.
-
----
-
-### 1️⃣ 초기 변환 요청
-
-**프롬프트:**
-```
-[Launcher.html 파일 업로드]
-
-이 파일을 옵시디언에서 볼 수 있는 정적 HTML로 만들어줘.
-
-요구사항:
-1. React 제거하고 순수 HTML/CSS로
-2. JavaScript 없애기
-3. 인터랙티브 요소는 "펼친 상태"로 정적 표현
-4. 각 앱별로 별도 HTML 파일로 분리
-
-옵션 1: 단일 파일로 (모든 앱을 한 파일에)
-옵션 2: 5개 파일로 분리
-  - launcher-home.html
-  - bqb-beginner.html
-  - bqb-intermediate.html
-  - quantum-world.html
-  - bqb-advanced.html
-
-어떤 게 좋을까?
-```
-
-**AI 응답**: 옵션 제시 → 사용자 선택 유도
+1. [환경 구성](#1-환경-구성)
+2. [전체 워크플로우](#2-전체-워크플로우)
+3. [JSX → HTML 변환 규칙](#3-jsx--html-변환-규칙)
+4. [Obsidian 삽입 방법](#4-obsidian-삽입-방법)
+5. [파일 크기별 권장 방식](#5-파일-크기별-권장-방식)
+6. [오프라인 환경 대응](#6-오프라인-환경-대응)
+7. [트러블슈팅](#7-트러블슈팅)
+8. [Git 동기화](#8-git-동기화)
+9. [부록: AI 변환 프롬프트 (PART A)](#9-부록-ai-변환-프롬프트-part-a)
 
 ---
 
-### 2️⃣ 옵션 선택
+## 1. 환경 구성
 
-**프롬프트:**
-```
-옵션 2로 해줘
-```
+### 기본 정보
 
-**결과**: AI가 5개 파일 생성 시작
+| 항목 | 경로 / 값 |
+|------|-----------|
+| Obsidian Vault | `C:\Users\user\Documents\Obsidian Vault\` |
+| Custom Frames 설정 | `.obsidian/plugins/obsidian-custom-frames/data.json` |
+| Git 원격 저장소 | `https://github.com/lee6147/obsidian-vault` (Private) |
+| Git 플러그인 | `obsidian-git` (lee6147/obsidian-git 포크 빌드) |
 
----
+### 설치된 플러그인
 
-### 3️⃣ 간소화 버전 거부
+| 플러그인 | 용도 |
+|----------|------|
+| Custom Frames | HTML/React 앱을 WebView로 렌더링 (JS 실행 가능) |
+| obsidian-git | Vault 자동 백업 & GitHub 동기화 |
+| HTML Reader | 기본 HTML 뷰어 (JS 미지원) |
 
-**배경**: AI가 처음에 간소화된 버전 제시
-
-**프롬프트:**
-```
-아니야 완전판으로 해줘
-```
-
-**결과**: AI가 모든 콘텐츠를 포함한 완전판으로 재작성
-
----
-
-### 4️⃣ 비주얼 누락 발견 및 보완 요청
-
-**배경**: bqb-beginner.html에서 과녁 다트보드 비주얼이 보이지 않음
-
-**프롬프트:**
-```
-이렇게 비주얼 적으로 누락 된거 다 확인해서 보완해^^
-```
-
-**AI 작업**:
-- 원본 Launcher.html 전체 분석
-- 19개 비주얼 컴포넌트 발견
-- 16개 누락 확인 (StraggleSim 제외)
-- 16개 SVG 비주얼 추가:
-  - BQB 초보자: 과녁×3, QuantumAtom, BeforeAfter
-  - BQB 중급: DepthProfile, LateralProfile, EnergyLevel, ProcessWindowBox
-  - Quantum World: 6개 양자 개념 비주얼
+> **핵심**: HTML/React 앱 실행에는 **Custom Frames** 플러그인의 WebView가 필요합니다.
+> HTML Reader는 JS를 지원하지 않으므로 React 앱에는 사용 불가합니다.
 
 ---
 
-### 5️⃣ 첫 번째 최종 검토
+## 2. 전체 워크플로우
 
-**프롬프트:**
 ```
-마지막 최종검토 해보자.
-Launcher Home 파일 뺴고
-```
-
-**AI 작업**:
-- 4개 파일 철저히 검증
-- HTML 구조, JavaScript 유무, SVG 개수, 한글 인코딩 확인
-- 모든 파일 검증 통과
-
----
-
-### 6️⃣ 레이아웃 문제 발견 (글자 겹침)
-
-**배경**: bqb-intermediate.html에서 SVG 그래프와 텍스트 겹침
-
-**프롬프트:**
-```
-[스크린샷 업로드]
-
-글자가 아직도 겹치지? 이 부분과 관련된 부분 고쳐
-```
-
-**AI 작업**:
-- SVG 높이 100px → 140px
-- margin 20px → 40px
-- padding 추가
-
----
-
-### 7️⃣ 정밀 조정 (3가지만)
-
-**프롬프트:**
-```
-지금 상태에서 내가 지시한 부분 외에 고치지 마
-
-1. 3D 공정창 크기 2배로 키워
-2. 종방향 산란 그래프의 SVG 높이 20% 높여
-3. SVG와 주변 텍스트 간 간격도 지금 보다 15% 더 확보해
-```
-
-**AI 작업**:
-- 3D 공정창: 220×220 → 440×440
-- 종방향 산란: height 140 → 168
-- margin: 40px → 46px (모든 SVG)
-
----
-
-### 8️⃣ 추가 조정
-
-**프롬프트:**
-```
-1. 글자가 아직도 겹치지? 이 부분과 관련된 부분 고쳐
-2. 3D공정창 크기 더 키워
-
-딱 이 두 가지만 고쳐
-```
-
-**AI 작업**:
-- SVG 아래 목표 박스에 margin-top: 30px 추가
-- 3D 공정창: 440×440 → 600×600
-
----
-
-### 9️⃣ 공정창 계층 구조 크기 조정
-
-**프롬프트:**
-```
-공정창 계층 구조 부분도 2배 정도 키워
-```
-
-**AI 작업**:
-- EnergyLevel: 280×200 → 560×400
-
----
-
-### 🔟 개념 검증 요청
-
-**배경**: 3D 공정창 비주얼 확인
-
-**프롬프트:**
-```
-[3D 공정창 스크린샷 업로드]
-
-이 개념 검토해봐 맞는지
-```
-
-**AI 응답**: σ_xy, σ_z, D_it 개념 설명 제공
-
----
-
-### 1️⃣1️⃣ 개념 설명 삽입 요청
-
-**프롬프트:**
-```
-1. 너의 그 개념설명을 공정창 상자 아래에 넣어줄래?
-2. 마지막으로 HTML 4가지 파일 다 가져와봐
-```
-
-**AI 작업**:
-- 3D 공정창 아래 개념 설명 카드 3개 추가
-- 4개 HTML 파일 제공
-
----
-
-### 1️⃣2️⃣ README.md 작성 요청
-
-**프롬프트:**
-```
-이제 GIt의 README.md 파일에 HTML 파일을 옵시디언에 연결하는 방법을 쓰고싶어
-니가 한번 쉽게 설명해줄래?
-```
-
-**AI 작업**: README.md 초안 작성
-
----
-
-### 1️⃣3️⃣ README 피드백 1
-
-**프롬프트:**
-```
-그냥 프로그램 설치하는것 까진 이해가 되는데 무슨 복사를 하는거지?
-```
-
-**AI 작업**: 
-- "복사"의 의미를 쉽게 재설명
-- HTML 파일을 옵시디언 폴더에 넣는 과정 명확화
-
----
-
-### 1️⃣4️⃣ README 피드백 2
-
-**프롬프트:**
-```
-어어 [간단히 해달라는 의미]
-```
-
-**AI 작업**: README를 훨씬 쉽고 직관적으로 재작성
-
----
-
-### 1️⃣5️⃣ README 피드백 3
-
-**프롬프트:**
-```
-이미지 코드 부분도 좀 봐줘 이거 안떠
-```
-
-**AI 작업**:
-- 외부 이미지 링크 제거
-- 이미지 → 상세한 텍스트 설명으로 교체
-- 9단계 플러그인 설치 가이드 추가
-
----
-
-### 1️⃣6️⃣ 최종 검토
-
-**프롬프트:**
-```
-최종검토 해봐
-```
-
-**AI 작업**:
-- 5개 파일 전체 검증
-- HTML 구조, JavaScript, SVG, 콘텐츠, 태그 균형 확인
-- ✅ 모든 파일 완벽 통과
-
----
-
-## 📊 최종 결과
-
-### 변환 통계
-- **원본**: 1개 파일 (213 KB, React)
-- **결과**: 5개 파일 (128.7 KB, 정적 HTML)
-- **SVG**: 16개
-- **애니메이션**: 36개
-- **프롬프트 횟수**: 약 16회
-
-### 파일 목록
-1. `bqb-beginner.html` (30.0 KB) - 6 SVG, 20 애니메이션
-2. `bqb-intermediate.html` (32.7 KB) - 4 SVG, 5 애니메이션
-3. `quantum-world.html` (24.8 KB) - 6 SVG, 11 애니메이션
-4. `bqb-advanced.html` (19.5 KB) - 데이터 테이블
-5. `README.md` (2.4 KB) - 사용 가이드
-
----
-
-## 💡 프롬프트 작성 핵심 팁
-
-### ✅ 효과적이었던 점
-
-1. **"지금 상태에서 다른 건 고치지 마"**
-   - 의도하지 않은 변경 방지
-   - 정밀한 조정 가능
-
-2. **스크린샷 활용**
-   - 말로 설명하기 어려운 문제를 시각적으로 전달
-   - "글자가 겹쳐"보다 이미지가 명확
-
-3. **구체적 수치 제시**
-   - "좀 키워줘" ❌
-   - "2배로 키워" ✅
-   - "20% 높여" ✅
-
-4. **단계적 피드백**
-   - 한 번에 완벽하게 요구 ❌
-   - 결과 보고 → 피드백 → 수정 반복 ✅
-
-5. **개수 명시**
-   - "딱 이 두 가지만" ✅
-   - "딱 이 3가지만" ✅
-
-### ❌ 주의할 점
-
-1. **애매한 표현 피하기**
-   - "적당히" ❌
-   - "보기 좋게" ❌
-
-2. **한 번에 너무 많이 요청**
-   - 10가지를 한 번에 ❌
-   - 2-3가지씩 단계적으로 ✅
-
-3. **검증 없이 진행**
-   - 중간 확인 없이 끝까지 ❌
-   - 단계마다 "가져와봐" ✅
-
----
-
-## 🔄 프롬프트 패턴 분석
-
-### 패턴 1: 선택지 제시 요청
-```
-옵션 1: [방법A]
-옵션 2: [방법B]
-
-어떤 게 좋을까?
-```
-
-### 패턴 2: 명확한 선택
-```
-옵션 2로 해줘
-```
-
-### 패턴 3: 품질 업그레이드
-```
-아니야 완전판으로 해줘
-```
-
-### 패턴 4: 포괄적 확인
-```
-이렇게 비주얼 적으로 누락 된거 다 확인해서 보완해
-```
-
-### 패턴 5: 제한적 수정
-```
-지금 상태에서 내가 지시한 부분 외에 고치지 마
-1. [수정1]
-2. [수정2]
-딱 이것만 고쳐
-```
-
-### 패턴 6: 개념 검증
-```
-[이미지]
-이 개념 검토해봐 맞는지
-```
-
-### 패턴 7: 설명 삽입
-```
-너의 그 개념설명을 [위치]에 넣어줄래?
-```
-
-### 패턴 8: 이해 확인
-```
-[설명 듣고]
-그냥 프로그램 설치하는것 까진 이해가 되는데 무슨 [부분]이 이해 안 돼?
-```
-
-### 패턴 9: 최종 검토
-```
-최종검토 해봐
+JSX/TSX 파일
+     │
+     ▼
+[AI에게 변환 요청]  ← 9번 부록의 프롬프트 사용
+     │
+     ▼
+변환된 .html 파일
+     │
+     ├─── [방법 A] Custom Frames WebView로 직접 열기  ← 권장
+     │         └─ data.json에 file:/// URL 등록
+     │
+     └─── [방법 B] 노트 안에 iframe으로 삽입
+               ├─ 파일 참조 방식 (100KB 이상)
+               └─ base64 인라인 방식 (100KB 이하)
 ```
 
 ---
 
-## 🎯 재현 가능한 워크플로우
+## 3. JSX → HTML 변환 규칙
 
-다른 사람이 같은 작업을 하려면:
+### AI를 사용한 자동 변환 (권장)
 
-### Step 1: 초기 설정
-```
-[HTML 파일 업로드]
-이 파일을 옵시디언에서 볼 수 있는 정적 HTML로 만들어줘.
-옵션 1: 단일 파일
-옵션 2: [섹션별 분리]
+9번 부록의 프롬프트를 AI에게 전달하고, 변환할 JSX/TSX 파일을 첨부해 요청합니다.
+AI가 아래 규칙을 모두 적용하여 변환된 HTML 파일을 출력합니다.
+
+### 수동 변환 핵심 규칙
+
+**구문 변환:**
+
+| 원본 | 변환 |
+|------|------|
+| `import { useState } from 'react'` | 삭제 (상단 const 선언으로 대체) |
+| `import React from 'react'` | 삭제 |
+| `export default function App()` | `function App()` |
+| `export default App` | 삭제 |
+| TypeScript 타입 어노테이션 (`: string`, `interface` 등) | 모두 제거 |
+
+**HTML 래퍼 구조:**
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>앱 이름</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body, #root { min-height: 100vh; }
+    body { background: #030712; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    /* 정적 @keyframes만 여기에 선언 */
+  </style>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+    /* 여기에 모든 컴포넌트 코드 */
+
+    ReactDOM.render(React.createElement(App), document.getElementById("root"));
+  </script>
+</body>
+</html>
 ```
 
-### Step 2: 선택 및 실행
-```
-옵션 [N]으로 해줘
-[결과가 간소화되면] 아니야 완전판으로 해줘
-```
+> **참고**: CDN은 인터넷 연결이 필요합니다. 오프라인 대응은 [6번 섹션](#6-오프라인-환경-대응)을 참조하세요.
 
-### Step 3: 비주얼 보완
-```
-이렇게 비주얼 적으로 누락 된거 다 확인해서 보완해
-```
+### 스타일링 규칙
 
-### Step 4: 레이아웃 조정
-```
-[스크린샷 첨부]
-지금 상태에서 내가 지시한 부분 외에 고치지 마
-1. [조정1]
-2. [조정2]
-딱 이것만 고쳐
-```
+- ❌ `className` 사용 금지 → 옵시디언 CSS와 충돌
+- ❌ 외부 CSS 파일, Tailwind, Google Fonts 등 금지
+- ✅ 인라인 `style={{}}` 사용
+- ✅ 시스템 폰트 스택: `'-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif'`
 
-### Step 5: 개념 추가
-```
-[스크린샷]
-이 개념 검토해봐 맞는지
-→ [AI 설명]
-너의 그 개념설명을 [위치]에 넣어줄래?
-```
+### 색상 테마 객체
 
-### Step 6: README 작성
-```
-README.md 파일에 [사용법] 쓰고싶어. 쉽게 설명해줄래?
-→ [피드백 반복]
-```
-
-### Step 7: 최종 검토
-```
-최종검토 해봐
+```javascript
+const T = {
+  bg: "#030712",
+  bgSub: "#0a0e1a",
+  card: "#0d1321",
+  surface: "#1a2236",
+  accent: "#6366f1",
+  accentCyan: "#22d3ee",
+  accentPink: "#e879f9",
+  text: "#e2e8f0",
+  textDim: "#94a3b8",
+  textMuted: "#475569",
+  border: "#1e293b",
+  borderLight: "#334155",
+};
 ```
 
 ---
 
-## 📝 실전 팁
+## 4. Obsidian 삽입 방법
 
-### 🎨 비주얼 관련
+### 방법 A — Custom Frames WebView (권장, 모든 크기)
 
-**문제**: 그래프 크기가 작음  
-**프롬프트**: `"[요소명] 크기 2배로 키워"`
+JS 실행이 완전히 지원됩니다. `.html` 파일이 Vault 밖에 있어도 됩니다.
 
-**문제**: 글자가 겹침  
-**프롬프트**: `[스크린샷] + "글자가 겹치지? 이 부분 고쳐"`
+**1. `data.json`에 항목 추가:**
 
-**문제**: 간격 부족  
-**프롬프트**: `"SVG와 주변 텍스트 간 간격 15% 더 확보해"`
+```json
+{
+  "url": "file:///C:/Users/user/Documents/Obsidian Vault/apps/앱이름.html",
+  "displayName": "표시 이름",
+  "icon": "rocket",
+  "hideOnMobile": true,
+  "addRibbonIcon": true,
+  "openInCenter": true,
+  "zoomLevel": 1,
+  "forceIframe": false,
+  "customCss": "body { overflow-x: hidden; }",
+  "customJs": ""
+}
+```
 
-### 📄 문서 관련
+**핵심 설정:**
+- `forceIframe: false` → WebView 사용 (JS 실행 가능)
+- `padding: 0` → 잘림 방지
 
-**문제**: README가 너무 복잡함  
-**프롬프트**: `"그냥 프로그램 설치하는것 까진 이해가 되는데 [부분]이 이해 안 돼"`
+**2. Obsidian 재시작:**
 
-**문제**: 이미지가 안 보임  
-**프롬프트**: `"이미지 코드 부분도 좀 봐줘 이거 안떠"`
+```bash
+taskkill //IM "Obsidian.exe" //F
+start "" "obsidian://open?vault=Obsidian%20Vault"
+```
 
-### 🔍 검증 관련
-
-**체크포인트마다**:  
-`"파일 [N]개 다시 가져와봐"`
-
-**최종**:  
-`"최종검토 해봐"`
-
----
-
-## ⏱️ 예상 소요 시간
-
-- **초기 변환**: 5-10분
-- **비주얼 보완**: 10-15분
-- **레이아웃 조정**: 10-20분 (피드백 반복)
-- **README 작성**: 5-10분
-- **최종 검토**: 5분
-- **총 시간**: 약 35-60분
+**3. 실행:** `Ctrl + P` → 등록한 `displayName` 검색 → 열기
 
 ---
 
-## 🎓 배운 점
+### 방법 B — 노트 안에 iframe 삽입
 
-1. **처음부터 완벽을 기대하지 말 것**
-   - 반복적 개선이 핵심
+#### B-1. HTML 파일 직접 참조 (100KB 이상 권장)
 
-2. **구체적일수록 좋은 결과**
-   - "2배", "20%", "15%" 같은 수치
+`.html` 파일을 Vault 폴더에 저장하고, 노트에 아래를 삽입합니다:
 
-3. **"다른 건 고치지 마" 중요**
-   - 의도하지 않은 변경 방지
+```html
+<div style="width:100%;height:800px;border-radius:12px;overflow:hidden;
+     box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+  <iframe src="앱이름.html"
+          style="width:100%;height:100%;border:none;"></iframe>
+</div>
+```
 
-4. **스크린샷 > 말**
-   - 시각적 문제는 시각적으로 전달
+#### B-2. Base64 인라인 (약 100KB 이하 소형 파일)
 
-5. **단계별 검증**
-   - "가져와봐", "최종검토" 자주 사용
+**base64 인코딩 (터미널):**
+
+```bash
+# macOS
+base64 -w 0 앱이름.html | pbcopy
+
+# Linux
+base64 -w 0 앱이름.html | xclip
+
+# Windows
+certutil -encode 앱이름.html tmp.b64 && type tmp.b64 | clip
+```
+
+**노트에 삽입:**
+
+```html
+<div style="width:100%;height:800px;border-radius:12px;overflow:hidden;
+     box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+  <iframe src="data:text/html;base64,[여기에 붙여넣기]"
+          style="width:100%;height:100%;border:none;"></iframe>
+</div>
+```
 
 ---
 
-## 📮 피드백
+### file:/// URL 규칙
 
-이 가이드가 도움이 되셨나요? 개선 제안을 환영합니다!
+- 정방향 슬래시(`/`) 사용: `file:///C:/Users/user/Desktop/app.html`
+- 공백은 `%20`으로 인코딩: `file:///C:/My%20Folder/app.html`
+- Vault 안에 없어도 절대경로로 지정 가능
 
 ---
 
-**이 프롬프트 가이드로 성공적인 변환 되시길! 🚀**
+## 5. 파일 크기별 권장 방식
+
+| 원본 JSX 크기 | 변환 HTML 예상 | 권장 삽입 방식 |
+|---------------|---------------|---------------|
+| ~100줄 | ~15KB | 방법 B-2 (base64 인라인) |
+| 100~1000줄 | 15~150KB | 방법 B-1 (파일 참조) 또는 방법 A |
+| 1000~3000줄 | 150~500KB | 방법 A (Custom Frames) 또는 B-1 |
+| 3000줄 이상 | 500KB+ | 기능 분할 후 각각 변환 → 방법 A |
+
+> **참고**: base64는 원본 대비 약 33% 크기 증가. 200KB HTML → 약 270KB base64.
+> 옵시디언 내부 WebView의 data URI 제한이 낮을 수 있으므로 대형 파일은 방법 A를 사용하세요.
+
+---
+
+## 6. 오프라인 환경 대응
+
+기본 변환 결과물은 React CDN에 의존하므로 인터넷 연결이 필요합니다.
+
+### 옵션 1: CDN 파일 로컬 저장
+
+다음 파일을 다운로드하여 Vault 내 `assets/` 폴더에 저장합니다:
+- `react.production.min.js`
+- `react-dom.production.min.js`
+- `babel.min.js`
+
+그리고 HTML의 `script src`를 상대 경로로 변경합니다.
+
+### 옵션 2: Vanilla JS 변환 요청
+
+AI에게 변환 요청 시, 9번 부록 프롬프트의 ① 아키텍처 부분을 아래로 교체합니다:
+
+> "React CDN을 사용하지 말고, 모든 useState를 순수 자바스크립트 이벤트 리스너와 DOM 조작으로 변환해."
+
+⚠️ 복잡한 컴포넌트는 변환 오류율이 높아질 수 있습니다.
+
+---
+
+## 7. 트러블슈팅
+
+| 증상 | 원인 | 해결 |
+|------|------|------|
+| iframe 빈 화면 (흰색) | CDN 로드 실패 | 인터넷 연결 확인 / 오프라인 옵션 적용 |
+| iframe 빈 화면 (검정) | JS 에러 | 브라우저 개발자 도구(F12)로 콘솔 에러 확인 |
+| 스타일 깨짐 | `className` 잔존 | HTML에서 `className` 검색 후 인라인으로 교체 |
+| 한글 깨짐 | 인코딩 문제 | `meta charset="UTF-8"` 확인 |
+| base64 삽입 후 안 보임 | 인코딩 불완전 | 방법 A 또는 B-1(파일 참조)로 전환 |
+| 클릭/탭 안 됨 | sandbox 속성 | iframe에 `sandbox` 속성이 있으면 제거 |
+| 스크롤 안 됨 | 높이 부족 | iframe `height` 값 증가 (800px → 1200px) |
+| 애니메이션 끊김 | 과다 파티클 | 파티클 수 줄이기 (25개 → 12개) |
+| 수식 렌더링 안 됨 | KaTeX 의존 | 유니코드 수학 기호로 교체 (Δ, ℏ, ≥ 등) |
+
+---
+
+## 8. Git 동기화
+
+| 방식 | 방법 |
+|------|------|
+| 자동 | obsidian-git 플러그인 설정에서 자동 백업 간격 지정 |
+| 수동 | `Ctrl + P` → `Git: Commit-and-sync` |
+| 원격 | https://github.com/lee6147/obsidian-vault |
+
+---
+
+## 9. 부록: AI 변환 프롬프트 (PART A)
+
+아래 내용을 AI 대화의 첫 메시지로 붙여넣고, 변환할 JSX/TSX 파일을 첨부한 뒤 "이 파일을 변환해줘"라고 요청합니다.
+
+---
+
+### [프롬프트 시작]
+
+#### Role
+너는 Senior 프론트엔드 엔지니어이자 학술적 시각화 전문가야.
+
+#### Mission
+첨부된 JSX(또는 TSX) 파일의 모든 기능·디자인·애니메이션을 유지하면서, 옵시디언(Obsidian) 노트에 삽입 가능한 Self-contained HTML 파일 하나로 변환해.
+
+#### 출력 규칙
+- 변환 결과는 완성된 HTML 파일 하나를 그대로 출력해.
+- base64 인코딩은 하지 마.
+- 코드 외의 설명은 최소화하고, 변환 중 판단이 필요했던 부분만 간략히 메모해.
+
+---
+
+#### ① 아키텍처 (필수 준수)
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[앱 제목]</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body, #root { min-height: 100vh; }
+  body { background: #030712; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  /* 정적 @keyframes만 여기에 선언 */
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+/* ═══ 여기에 모든 컴포넌트 코드 ═══ */
+
+ReactDOM.render(React.createElement(App), document.getElementById("root"));
+</script>
+</body>
+</html>
+```
+
+---
+
+#### ② 구문 변환 규칙
+
+**import 변환표:**
+
+| 원본 | 변환 |
+|------|------|
+| `import { useState, useEffect } from 'react'` | 삭제 |
+| `import React from 'react'` | 삭제 |
+| `import { LineChart } from 'recharts'` | ③ 라이브러리 표 참조 |
+| `import { Camera } from 'lucide-react'` | 이모지 또는 인라인 SVG로 교체 |
+| `import { motion } from 'framer-motion'` | CSS @keyframes + transition |
+| `import styles from './App.module.css'` | 인라인 `style={{}}` |
+| `import './globals.css'` | head style로 이식 |
+| `import image from './image.png'` | SVG 또는 CSS gradient |
+
+**export 변환표:**
+
+| 원본 | 변환 |
+|------|------|
+| `export default function App()` | `function App()` |
+| `export function Component()` | `function Component()` |
+| `export const value = ...` | `const value = ...` |
+| `export default App` | 삭제 |
+
+**TypeScript 처리:** 모든 타입 어노테이션(`: string`, `interface`, `type`, `<T>`, `as`) 제거
+
+---
+
+#### ③ 외부 라이브러리 대응표
+
+| 라이브러리 | 처리 방법 |
+|------------|-----------|
+| recharts / chart.js | SVG로 직접 구현 |
+| d3 | 핵심 연산만 순수 JS로 이식, DOM 조작은 React로 |
+| lucide-react / heroicons | 이모지 또는 인라인 SVG |
+| framer-motion | CSS @keyframes + transition |
+| react-router / react-router-dom | useState 기반 탭 네비게이션 |
+| zustand / redux | useState/useReducer로 병합 |
+| tailwindcss | 인라인 `style={{}}` 1:1 변환 |
+| shadcn/ui / @radix-ui | 순수 JSX+인라인 스타일로 재작성 |
+| clsx / classnames | 삭제, 조건부 style 객체로 교체 |
+| axios | 삭제 (네트워크 요청 불가 환경) |
+| next/image | SVG 또는 CSS로 교체 |
+| next/link | `button onClick`으로 교체 |
+| katex | HTML+CSS로 수식 직접 렌더 또는 유니코드 기호 |
+
+처리 방법이 불확실한 라이브러리는 변환하지 말고 주석으로 표시한 뒤 질문할 것.
+
+---
+
+#### ④ 색상 시스템
+
+```javascript
+const T = {
+  bg: "#030712", bgSub: "#0a0e1a", card: "#0d1321", cardHover: "#131b2e",
+  surface: "#1a2236", accent: "#6366f1", accentCyan: "#22d3ee", accentPink: "#e879f9",
+  text: "#e2e8f0", textDim: "#94a3b8", textMuted: "#475569",
+  border: "#1e293b", borderLight: "#334155", glow: "#6366f1",
+};
+```
+
+- CSS 변수(`var(--background-primary)`) 사용 금지 — iframe 내부에서 접근 불가
+- 반투명: `${color}15` (~8%), `${color}30` (~19%), `${color}80` (~50%)
+
+---
+
+#### ⑤ 스타일링 규칙
+
+- ❌ `className` 사용 금지
+- ❌ 외부 CSS 파일, Tailwind, Google Fonts 금지
+- ✅ 인라인 `style={{}}`
+- ✅ 시스템 폰트: `'-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif'`
+- ✅ 모노 폰트: `'"SF Mono", "Fira Code", "Consolas", monospace'`
+
+---
+
+#### ⑥ 애니메이션 이식
+
+**@keyframes 선언 위치:**
+- 동적 값 없는 정적 → `head` 내 `style` 태그
+- 동적 값 포함(`${size}`, `${color}`) → 해당 컴포넌트의 `return` 내부 `style` 태그
+
+**안정적 의사 랜덤 (Math.random() 대신):**
+
+```javascript
+function seededRandom(seed) {
+  const x = Math.sin(seed * 9301 + 49297) * 49297;
+  return x - Math.floor(x);
+}
+```
+
+**애니메이션 누락 체크 키워드:** `@keyframes`, `animation:`, `transition:`, `transform`, `animate`, `animateTransform`
+
+---
+
+#### ⑦ SVG 인라인 규칙
+
+- `viewBox` 반드시 명시
+- `width="100%"` 또는 고정 px
+- SMIL 애니메이션(`animate`, `animateTransform`) 사용 가능
+- 차트/프로파일 등 수학 함수 기반 SVG는 순수 JS로 좌표 계산 후 `polyline`/`polygon`으로 렌더
+
+---
+
+#### ⑧ 변환 절차
+
+**Step 1: 소스 분석**
+- 모든 React 훅 목록
+- 컴포넌트 트리
+- 외부 의존성 전체 목록
+- @keyframes 전체 수집
+- SVG 컴포넌트 식별
+
+**Step 2: 의존성 제거 및 변환**
+
+**Step 3: 단일 파일 조립**
+
+**Step 4: 자기 검증 체크리스트**
+- [ ] 모든 import 제거/변환
+- [ ] 모든 export 제거
+- [ ] `className` 없음
+- [ ] 모든 useState/useEffect 보존
+- [ ] 모든 @keyframes 이식
+- [ ] 모든 SVG 인라인 포함
+- [ ] 외부 이미지/폰트 참조 없음
+- [ ] `Math.random()` → `seededRandom()` 교체
+- [ ] TypeScript 타입 어노테이션 모두 제거
+- [ ] `ReactDOM.render(...)` 마지막에 있음
+
+---
+
+#### ⑨ 금지 사항
+
+1. `className` 사용 금지
+2. `window.localStorage` / `sessionStorage` 사용 금지
+3. `fetch()` / `XMLHttpRequest` 데이터 API 호출 금지
+4. 외부 이미지(`img src="http..."`) 금지
+5. `window.open` / `window.location` 변경 금지
+6. `console.log` 남발 금지
+7. 파일 상단에 원본 파일명과 변환 일시를 주석으로 기록
+
+### [프롬프트 끝]
+
+---
+
+## 버전 이력
+
+| 버전 | 주요 변경 |
+|------|-----------|
+| v1 (문서 2) | 초기 환경 구성 + Custom Frames 등록 절차 |
+| v2 (문서 1 v1~v2) | AI 변환 프롬프트 초안 — Vanilla JS 기반 → React CDN 유지 전략으로 전환 |
+| v3 (통합) | 두 문서 합병 — 환경 구성~변환~삽입 전체 워크플로우 단일 문서화. import/export 변환 규칙, 라이브러리 대응표, 오프라인 대응, 트러블슈팅 통합. |
