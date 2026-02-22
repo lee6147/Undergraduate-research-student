@@ -43,7 +43,9 @@ Custom Frames에 등록된 파일은 리본(좌측 사이드바) 아이콘을 �
 
 HTML 파일을 새로 만들면 **반드시 Custom Frames에 등록**해야 Obsidian에서 열 수 있습니다.
 
-`.obsidian/plugins/obsidian-custom-frames/data.json`의 `frames` 배열에 추가:
+**Claude Code에게 "Custom Frames에 등록해줘"라고 요청하면 자동으로 `data.json`에 추가해줍니다.**
+
+수동으로 등록할 경우 `.obsidian/plugins/obsidian-custom-frames/data.json`의 `frames` 배열에 추가:
 
 ```json
 {
