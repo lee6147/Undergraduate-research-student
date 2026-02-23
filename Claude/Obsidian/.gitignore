@@ -1,0 +1,7 @@
+# Obsidian 설정 전체 무시
+.obsidian/
+
+# 시스템 파일
+.trash/
+.DS_Store
+Thumbs.db
