@@ -36,7 +36,7 @@ Email: [email]}
 \maketitle
 
 \begin{abstract}
-양자 머신러닝(Quantum Machine Learning, QML)은 양자 컴퓨팅의 고유한 특성을 활용하여 고전적 머신러닝의 한계를 극복할 수 있는 잠재력을 가진 분야로 주목받고 있다. 본 연구에서는 Variational Quantum Classifier(VQC)와 Quantum Support Vector Classifier(QSVC)를 구현하고, 세 가지 표준 벤치마크 데이터셋(Iris, Wine, Breast Cancer)에서 고전적 머신러닝 모델(SVM, MLP, Random Forest)과 체계적으로 성능을 비교하였다. 실험은 Qiskit 기반 시뮬레이터에서 수행되었으며, 데이터 인코딩 방식(Angle, ZZ), 변분 회로 구조(RealAmplitudes, EfficientSU2), 옵티마이저(COBYLA, SPSA), 회로 깊이(1--4 reps), 옵티마이저 수렴 분석, 양자 노이즈 영향 등 다양한 조건에서의 성능 변화를 분석하였다. 모든 실험은 10개의 랜덤 시드로 반복 수행하여 통계적 신뢰성을 확보하였으며, 모델 간 성능 차이는 Wilcoxon signed-rank test로 검정하였다. 실험 결과, VQC는 최적 회로 설정(reps=3)에서도 Iris 66.7\%, Wine 67.2\%, Breast Cancer 85.8\%에 머물러 고전적 모델(95\% 이상) 대비 통계적으로 유의하게 낮았다($p < 0.005$). 반면 동일한 양자 특징 공간을 활용하는 QSVC는 Breast Cancer 데이터셋에서 $95.4 \pm 1.3$\%의 정확도를 달성하여 고전 SVM($95.2 \pm 1.7$\%)과 동등한 성능을 보였다. 수렴 분석에서는 COBYLA 옵티마이저가 maxiter 설정과 무관하게 약 70--85회 함수 평가 후 조기 수렴하여, VQC의 성능 병목이 변분 최적화 자체에 있음을 실증하였다. 본 연구는 NISQ 시대에서 양자 분류기의 접근법별(변분 최적화 vs 양자 커널) 실질적 성능 차이를 분석한 기초 연구로서 의의를 갖는다.
+양자 머신러닝(Quantum Machine Learning, QML)은 양자 컴퓨팅의 고유한 특성을 활용하여 고전적 머신러닝의 한계를 극복할 수 있는 잠재력을 가진 분야로 주목받고 있다. 본 연구에서는 Variational Quantum Classifier(VQC)와 Quantum Support Vector Classifier(QSVC)를 구현하고, 세 가지 표준 벤치마크 데이터셋(Iris, Wine, Breast Cancer)에서 고전적 머신러닝 모델(SVM, MLP, Random Forest)과 체계적으로 성능을 비교하였다. 실험은 Qiskit 기반 시뮬레이터에서 수행되었으며, 데이터 인코딩 방식(Angle, ZZ), 변분 회로 구조(RealAmplitudes, EfficientSU2), 옵티마이저(COBYLA, SPSA), 회로 깊이(1--4 reps), 옵티마이저 수렴 분석, 양자 노이즈 영향 등 다양한 조건에서의 성능 변화를 분석하였다. 모든 실험은 10개의 랜덤 시드로 반복 수행하여 통계적 신뢰성을 확보하였으며, 모델 간 성능 차이는 Wilcoxon signed-rank test로 검정하였다. 실험 결과, VQC는 회로 깊이를 증가시켜도(reps=4) Iris 66.7\%, Breast Cancer 87.8\%에 머물러 고전적 모델(95\% 이상) 대비 통계적으로 유의하게 낮았다($p < 0.005$). 반면 동일한 양자 특징 공간을 활용하는 QSVC는 Breast Cancer 데이터셋에서 $95.4 \pm 1.3$\%의 정확도를 달성하여 고전 SVM($95.2 \pm 1.7$\%)과 동등한 성능을 보였다. 수렴 분석에서는 COBYLA 옵티마이저가 maxiter 설정과 무관하게 약 70--85회 함수 평가 후 조기 수렴하여, VQC의 성능 병목이 변분 최적화 자체에 있음을 실증하였다. 본 연구는 NISQ 시대에서 양자 분류기의 접근법별(변분 최적화 vs 양자 커널) 실질적 성능 차이를 분석한 기초 연구로서 의의를 갖는다.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -66,7 +66,7 @@ NISQ(Noisy Intermediate-Scale Quantum) 시대의 양자 컴퓨터는 큐비트 �
 
 \subsection{연구 기여}
 
-본 연구의 주요 기여는 다음과 같다: (1) 동일한 양자 인코딩 하에서 변분 최적화 방식(VQC)과 양자 커널 방식(QSVC)의 성능 차이를 체계적으로 비교하여, 현재의 성능 병목이 양자 특징 공간이 아닌 최적화 방법론에 있음을 실증한 점, (2) VQC의 최적 회로 설정(reps=3)에서도 고전 모델 대비 열위임을 통계적으로 검증한 점(Wilcoxon signed-rank test, $p < 0.005$), (3) 이진분류(Breast Cancer)와 다중분류(Iris, Wine)에서의 양자 분류기 성능 차이를 비교 분석한 점이다.
+본 연구의 주요 기여는 다음과 같다: (1) 동일한 양자 인코딩 하에서 변분 최적화 방식(VQC)과 양자 커널 방식(QSVC)의 성능 차이를 체계적으로 비교하여, 현재의 성능 병목이 양자 특징 공간이 아닌 최적화 방법론에 있음을 실증한 점, (2) VQC의 회로 깊이를 최대 4 reps까지 증가시켜도 고전 모델 대비 열위임을 통계적으로 검증한 점(Wilcoxon signed-rank test, $p < 0.005$), (3) 이진분류(Breast Cancer)와 다중분류(Iris, Wine)에서의 양자 분류기 성능 차이를 비교 분석한 점이다.
 
 \subsection{연구 질문}
 
@@ -400,7 +400,7 @@ Iris에서는 COBYLA가 SPSA보다 약 1.3\%p 높은 정확도를 달성하였�
     \label{fig:circuit_depth}
 \end{figure}
 
-Iris에서 reps=4에서 최고 성능(66.7$\pm$0.0\%)을 달성하였으며, 10개 시드 모두 동일한 결과를 보여 가장 안정적인 수렴을 나타냈다. Breast Cancer에서도 reps=4에서 87.8$\pm$2.0\%로 최고 성능을 보였다. 4큐비트 소규모 회로에서는 barren plateau 현상이 관찰되지 않았다~\cite{mcclean2018}.
+Iris에서 reps=4에서 최고 성능(66.7$\pm$0.0\%)을 달성하였으며, 10개 시드 모두 동일한 결과를 보여 가장 안정적인 수렴을 나타냈다. Breast Cancer에서도 reps=4에서 87.8$\pm$2.0\%로 최고 성능을 보였다. 4큐비트 소규모 회로에서는 barren plateau 현상이 관찰되지 않았으며~\cite{mcclean2018}, 이는 Sim et al.~\cite{sim2019}이 분석한 저큐비트 회로의 높은 표현력과 일치한다.
 
 \begin{figure}[htbp]
     \centering
@@ -445,7 +445,7 @@ Iris에서 reps=4에서 최고 성능(66.7$\pm$0.0\%)을 달성하였으며, 10�
     \label{fig:noise}
 \end{figure}
 
-Depolarizing 노이즈가 증가함에 따라 VQC 성능이 단조 감소하였다. Iris에서 이상적 조건 64.0\%가 $p=0.05$에서 56.0\%로 약 8\%p 하락하였으며, Breast Cancer에서는 87.1\%에서 82.2\%로 약 5\%p 하락하였다. NISQ 환경에서 양자 오류 완화(error mitigation) 기술의 중요성을 확인하였다~\cite{li2017}. 본 실험의 이상적 조건은 AerSimulator(shot noise 포함)를 사용하였으며, 이는 실험 1의 StatevectorSampler(shot noise 없음)와 다른 시뮬레이터이므로 실험 1과 직접 비교할 수 없다.
+Depolarizing 노이즈가 증가함에 따라 VQC 성능이 전반적으로 감소하였다. Iris에서는 이상적 조건 64.0\%가 $p=0.05$에서 56.0\%로 약 8\%p 단조 하락하였다. Breast Cancer에서는 $p=0.05$에서 82.2\%로 이상적 조건(87.1\%) 대비 약 5\%p 하락하였으나, 중간 노이즈 수준($p=0.005$, $p=0.01$)에서는 표준편차 범위 내의 변동으로 비단조적 양상을 보였다. 높은 노이즈 수준에서의 성능 저하는 NISQ 환경에서 양자 오류 완화(error mitigation) 기술의 중요성을 확인한다~\cite{li2017}. 본 실험의 이상적 조건은 AerSimulator(shot noise 포함)를 사용하였으며, 이는 실험 1의 StatevectorSampler(shot noise 없음)와 다른 시뮬레이터이므로 실험 1과 직접 비교할 수 없다.
 
 \FloatBarrier
 
@@ -479,7 +479,7 @@ Depolarizing 노이즈가 증가함에 따라 VQC 성능이 단조 감소하였�
     \label{fig:convergence}
 \end{figure}
 
-COBYLA 옵티마이저는 maxiter 설정과 무관하게 약 74--86회의 함수 평가 후 자체 수렴 기준에 도달하여 조기 종료하였다. Iris와 Breast Cancer 모두에서 학습 시간이 세 조건에서 거의 동일한 점에서도 이를 확인할 수 있다. maxiter를 5배(1000)로 증가시켜도 정확도가 개선되지 않았으며, 이는 VQC의 성능 병목이 반복 횟수 부족이 아닌 비볼록 손실 지형의 구조적 한계에 기인함을 시사한다.
+COBYLA 옵티마이저는 maxiter 설정과 무관하게 약 74--86회의 함수 평가 후 자체 수렴 기준에 도달하여 조기 종료하였다. Iris와 Breast Cancer 모두에서 학습 시간이 세 조건에서 거의 동일한 점에서도 이를 확인할 수 있다. maxiter를 5배(1000)로 증가시켜도 정확도가 개선되지 않고 오히려 소폭 하락하였으며(Iris: 64.3\% $\rightarrow$ 62.0\%, BC: 87.9\% $\rightarrow$ 86.8\%), 이는 VQC의 성능 병목이 반복 횟수 부족이 아닌 비볼록 손실 지형의 구조적 한계에 기인함을 시사한다.
 
 \FloatBarrier
 
@@ -550,7 +550,7 @@ VQC의 성능 병목 원인을 다각도로 분석한 결과:
 
 \subsection{양자 노이즈의 영향}
 
-실험 5에서 depolarizing 노이즈가 VQC 성능에 단조 감소 영향을 미침을 확인하였다. 노이즈 수준이 증가함에 따라 Iris에서 64.0\% $\rightarrow$ 56.0\%, Breast Cancer에서 87.1\% $\rightarrow$ 82.2\%로 하락하여~\cite{ibmroadmap2023}, NISQ 환경에서 양자 오류 완화 기술의 필요성을 확인하였다.
+실험 5에서 높은 수준의 depolarizing 노이즈($p=0.05$)가 VQC 성능을 유의하게 저하시킴을 확인하였다. Iris에서 64.0\% $\rightarrow$ 56.0\%, Breast Cancer에서 87.1\% $\rightarrow$ 82.2\%로 하락하여~\cite{ibmroadmap2023}, NISQ 환경에서 양자 오류 완화 기술의 필요성을 확인하였다.
 
 \subsection{VQC vs QSVC: 접근법별 분석}
 
@@ -564,7 +564,7 @@ QSVC가 정확도 측면에서 고전 SVM과 동등한 성능을 보였으나, �
 
 \subsection{양자 이점에 대한 논의}
 
-분류 정확도 측면의 양자 이점은 관찰되지 않았으나, QSVC가 고전 SVM과 동등한 성능을 달성한 것은 양자 특징 공간의 유효성을 보여준다. Huang et al.~\cite{huang2021}이 지적한 바와 같이, 고전 데이터에 대한 양자 이점은 데이터의 구조와 양자 모델의 귀납적 편향이 일치할 때 발현될 수 있다. VQC와 QSVC의 성능 차이는 양자 컴퓨팅의 잠재력이 아닌 최적화 방법론의 선택이 현재의 병목임을 시사한다. Liu et al.~\cite{liu2021}이 증명한 양자 속도 향상의 조건은 본 실험의 소규모 정형 데이터셋에는 해당되지 않으며, 양자 이점이 발현되는 문제 구조에 대한 추가 연구가 필요하다.
+분류 정확도 측면의 양자 이점은 관찰되지 않았으며, 이는 Bowles et al.~\cite{bowles2024}이 지적한 양자 ML 벤치마크의 일반적 경향과 일치한다. 그러나 QSVC가 고전 SVM과 동등한 성능을 달성한 것은 양자 특징 공간의 유효성을 보여준다. Huang et al.~\cite{huang2021}이 지적한 바와 같이, 고전 데이터에 대한 양자 이점은 데이터의 구조와 양자 모델의 귀납적 편향이 일치할 때 발현될 수 있다. VQC와 QSVC의 성능 차이는 양자 컴퓨팅의 잠재력이 아닌 최적화 방법론의 선택이 현재의 병목임을 시사한다. Liu et al.~\cite{liu2021}이 증명한 양자 속도 향상의 조건은 본 실험의 소규모 정형 데이터셋에는 해당되지 않으며, 양자 이점이 발현되는 문제 구조에 대한 추가 연구가 필요하다.
 
 \subsection{연구의 한계}
 
@@ -582,10 +582,10 @@ QSVC가 정확도 측면에서 고전 SVM과 동등한 성능을 보였으나, �
 본 연구에서는 VQC와 QSVC를 세 가지 표준 벤치마크 데이터셋에서 구현하고, 고전적 ML 모델과 체계적으로 비교하였다. 주요 결론:
 
 \begin{enumerate}
-    \item VQC는 최적 설정(reps=3)에서도 고전적 ML 모델 대비 통계적으로 유의하게 낮은 성능을 보였다 (Wilcoxon, $p < 0.005$). 반면 QSVC-Angle은 Breast Cancer에서 95.4$\pm$1.3\%로 고전 SVM(95.2$\pm$1.7\%)과 동등하였다.
+    \item VQC는 회로 깊이를 최대 4 reps까지 증가시켜도 고전적 ML 모델 대비 통계적으로 유의하게 낮은 성능을 보였다 (Wilcoxon, $p < 0.005$). 반면 QSVC-Angle은 Breast Cancer에서 95.4$\pm$1.3\%로 고전 SVM(95.2$\pm$1.7\%)과 동등하였다.
     \item VQC의 성능 병목은 변분 최적화의 구조적 한계이다. COBYLA가 maxiter와 무관하게 $\sim$74--86회 평가 후 조기 수렴하였다.
     \item Angle Encoding이 ZZ Feature Map보다 VQC와 QSVC 모두에서 안정적이다.
-    \item 양자 노이즈는 VQC 성능을 단조 감소시킨다. Iris: 64.0\% $\rightarrow$ 56.0\%, BC: 87.1\% $\rightarrow$ 82.2\%.
+    \item 높은 수준의 양자 노이즈($p=0.05$)는 VQC 성능을 유의하게 저하시킨다. Iris: 64.0\% $\rightarrow$ 56.0\%, BC: 87.1\% $\rightarrow$ 82.2\%.
     \item 이진분류(Breast Cancer)에서 VQC 성능이 다중분류(Iris, Wine) 대비 현저히 높다 (86.6\% vs 64.3--67.2\%).
 \end{enumerate}
 
